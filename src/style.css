@@ -229,7 +229,7 @@ body {
   bottom: calc(12px + var(--safe-bottom));
   z-index: 4;
   display: grid;
-  grid-template-columns: 1fr 1.15fr 1fr;
+  grid-template-columns: repeat(4, 1fr);
   gap: 8px;
   padding: 8px;
   border-radius: 28px;
@@ -426,6 +426,34 @@ h1 {
 
 .share-sheet button:disabled {
   opacity: 0.38;
+}
+
+.wallpaper-note {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.wallpaper-steps {
+  padding: 12px;
+  border-radius: 16px;
+  background: #0f0e0b;
+}
+
+.wallpaper-steps strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--gold);
+  font-size: 13px;
+}
+
+.wallpaper-steps span {
+  color: var(--cream);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.wallpaper-steps.is-current {
+  border: 1px solid var(--gold);
 }
 
 .toast {

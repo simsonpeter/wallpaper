@@ -17,8 +17,13 @@ const fallbackNote = document.querySelector<HTMLElement>('#fallback-note')!
 const verseRef = document.querySelector<HTMLElement>('#verse-ref')!
 const verseText = document.querySelector<HTMLElement>('#verse-text')!
 const downloadBtn = document.querySelector<HTMLButtonElement>('#download-btn')!
+const setWallpaperBtn = document.querySelector<HTMLButtonElement>('#set-wallpaper-btn')!
 const shareBtn = document.querySelector<HTMLButtonElement>('#share-btn')!
 const shareSheet = document.querySelector<HTMLElement>('#share-sheet')!
+const wallpaperSheet = document.querySelector<HTMLElement>('#wallpaper-sheet')!
+const wallpaperCloseBtn = document.querySelector<HTMLButtonElement>('#wallpaper-close-btn')!
+const iosSteps = document.querySelector<HTMLElement>('#ios-steps')!
+const androidSteps = document.querySelector<HTMLElement>('#android-steps')!
 const shareTextBtn = document.querySelector<HTMLButtonElement>('#share-text-btn')!
 const shareImageBtn = document.querySelector<HTMLButtonElement>('#share-image-btn')!
 const shareCancelBtn = document.querySelector<HTMLButtonElement>('#share-cancel-btn')!
@@ -77,11 +82,29 @@ function currentImageUrl(verse: VerseWallpaper): string {
   return wallpaperUrl(verse, orientation) || wallpaperUrl(verse, orientation === 'landscape' ? 'portrait' : 'landscape')
 }
 
+function anyGuideOpen(): boolean {
+  return sheet.classList.contains('is-open') || !shareSheet.hidden || !wallpaperSheet.hidden
+}
+
 function setShareOpen(open: boolean) {
   shareSheet.hidden = !open
   if (open) {
+    wallpaperSheet.hidden = true
     sheetBackdrop.hidden = false
-  } else if (!sheet.classList.contains('is-open')) {
+  } else if (!anyGuideOpen()) {
+    sheetBackdrop.hidden = true
+  }
+}
+
+function setWallpaperGuideOpen(open: boolean) {
+  wallpaperSheet.hidden = !open
+  if (open) {
+    shareSheet.hidden = true
+    sheetBackdrop.hidden = false
+    const apple = /iPhone|iPad|iPod/i.test(navigator.userAgent)
+    iosSteps.classList.toggle('is-current', apple)
+    androidSteps.classList.toggle('is-current', !apple)
+  } else if (!anyGuideOpen()) {
     sheetBackdrop.hidden = true
   }
 }
@@ -142,6 +165,7 @@ function renderPreview() {
   preview.classList.toggle('is-portrait', orientation === 'portrait')
   screen.classList.toggle('has-image', Boolean(url))
   downloadBtn.disabled = !url
+  setWallpaperBtn.disabled = !url
   shareBtn.disabled = false
   prevBtn.disabled = verses.length < 2
   nextBtn.disabled = verses.length < 2
@@ -167,22 +191,26 @@ function renderPreview() {
   syncUrl(verse)
 }
 
-async function downloadWallpaper() {
+async function downloadWallpaper(): Promise<boolean> {
   const verse = selectedVerse()
   if (!verse) {
-    return
+    return false
   }
 
   const url = currentImageUrl(verse)
   if (!url) {
     showToast('Add an image link first.')
-    return
+    return false
   }
 
   const filename = fileNameFor(verse, orientation, url)
+  const fetchUrl = url.replace(
+    /^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/(?:refs\/heads\/)?([^/]+)\/(.+)$/,
+    'https://cdn.jsdelivr.net/gh/$1/$2@$3/$4',
+  )
 
   try {
-    const response = await fetch(url)
+    const response = await fetch(fetchUrl)
     if (!response.ok) {
       throw new Error('Download failed')
     }
@@ -193,7 +221,7 @@ async function downloadWallpaper() {
     link.download = filename
     link.click()
     URL.revokeObjectURL(objectUrl)
-    showToast('Saved to downloads.')
+    return true
   } catch {
     const link = document.createElement('a')
     link.href = url
@@ -201,8 +229,16 @@ async function downloadWallpaper() {
     link.target = '_blank'
     link.rel = 'noreferrer'
     link.click()
-    showToast('Opened wallpaper.')
+    return true
   }
+}
+
+async function setAsWallpaper() {
+  const saved = await downloadWallpaper()
+  if (!saved) {
+    return
+  }
+  setWallpaperGuideOpen(true)
 }
 
 async function sharePayload(payload: ShareData) {
@@ -309,7 +345,15 @@ document.querySelectorAll<HTMLButtonElement>('.orient').forEach((button) => {
 })
 
 downloadBtn.addEventListener('click', () => {
-  void downloadWallpaper()
+  void downloadWallpaper().then((saved) => {
+    if (saved) {
+      showToast('Saved to downloads.')
+    }
+  })
+})
+
+setWallpaperBtn.addEventListener('click', () => {
+  void setAsWallpaper()
 })
 
 shareBtn.addEventListener('click', () => {
@@ -332,6 +376,7 @@ shareCancelBtn.addEventListener('click', () => {
 
 versesBtn.addEventListener('click', () => {
   setShareOpen(false)
+  setWallpaperGuideOpen(false)
   setSheetOpen(true)
 })
 
@@ -347,6 +392,7 @@ document.addEventListener('keydown', (event) => {
   if (
     sheet.classList.contains('is-open') ||
     !shareSheet.hidden ||
+    !wallpaperSheet.hidden ||
     event.target instanceof HTMLInputElement
   ) {
     return
@@ -362,6 +408,11 @@ document.addEventListener('keydown', (event) => {
 sheetBackdrop.addEventListener('click', () => {
   setSheetOpen(false)
   setShareOpen(false)
+  setWallpaperGuideOpen(false)
+})
+
+wallpaperCloseBtn.addEventListener('click', () => {
+  setWallpaperGuideOpen(false)
 })
 
 sheetClose.addEventListener('click', () => {
