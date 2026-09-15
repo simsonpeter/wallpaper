@@ -488,6 +488,7 @@ const splashStarted = Date.now()
 const minSplashMs = 5000
 
 function hideSplash() {
+  document.documentElement.classList.remove('is-booting')
   if (splash.hidden || splash.classList.contains('is-leaving')) {
     return
   }

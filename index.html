@@ -1,9 +1,27 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="is-booting">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="./icons/icon-192.png" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1170x2532.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-2532x1170.png" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1179x2556.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-2556x1179.png" media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1284x2778.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-2778x1284.png" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1290x2796.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-2796x1290.png" media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1242x2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-828x1792.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1206x2622.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-2622x1206.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-1320x2868.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="./splashes/splash-2868x1320.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
+    <link rel="preload" as="image" href="./icons/splash-logo.png" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -14,14 +32,51 @@
     <meta name="theme-color" content="#0b0a08" />
     <title>TCW</title>
     <style>
-      #splash {
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: #0b0a08;
+        overflow: hidden;
+      }
+      #app {
         position: absolute;
         inset: 0;
-        z-index: 30;
+        overflow: hidden;
+        background: #0b0a08;
+      }
+      #splash {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
         display: grid;
         place-items: center;
+        overflow: hidden;
         background: #0b0a08;
         padding: 24px;
+      }
+      #splash .splash-brand {
+        display: grid;
+        justify-items: center;
+        gap: 18px;
+        text-align: center;
+      }
+      #splash .splash-logo {
+        width: min(46vw, 38vh, 220px);
+        height: min(46vw, 38vh, 220px);
+        max-width: 220px;
+        max-height: 220px;
+        background: url('./icons/splash-logo.png') center / contain no-repeat;
+      }
+      #splash .splash-credit {
+        margin: 0;
+        color: #e0c08a;
+        font: 500 15px/1.3 system-ui, sans-serif;
+        letter-spacing: 0.12em;
+      }
+      html.is-booting .screen {
+        visibility: hidden;
       }
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,14 +87,13 @@
     />
   </head>
   <body>
-    <div id="app">
-      <div class="splash" id="splash" role="img" aria-label="TCW. By JayathaSoft">
-        <div class="splash-brand">
-          <img class="splash-logo" src="./icons/logo.png" alt="" />
-          <p class="splash-credit">By JayathaSoft</p>
-        </div>
+    <div class="splash" id="splash" aria-label="TCW. By JayathaSoft">
+      <div class="splash-brand">
+        <div class="splash-logo" aria-hidden="true"></div>
+        <p class="splash-credit">By JayathaSoft</p>
       </div>
-
+    </div>
+    <div id="app">
       <main class="screen">
         <figure class="preview" id="preview">
           <img id="preview-image" alt="" hidden />

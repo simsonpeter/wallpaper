@@ -46,11 +46,12 @@ body {
 }
 
 .splash {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  z-index: 30;
+  z-index: 9999;
   display: grid;
   place-items: center;
+  overflow: hidden;
   padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
   background: #0b0a08;
   transition: opacity 0.45s ease;
@@ -74,11 +75,9 @@ body {
 
 .splash-logo {
   width: min(46vw, 38vh, 220px);
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: contain;
-  display: block;
-  border-radius: 22%;
+  height: min(46vw, 38vh, 220px);
+  max-width: 220px;
+  max-height: 220px;
 }
 
 .splash-credit {
