@@ -94,12 +94,14 @@ function renderPreview() {
   }
 
   selectedId = verse.id
-  const url = wallpaperUrl(verse, orientation)
+  const url = wallpaperUrl(verse, orientation) || wallpaperUrl(verse, orientation === 'landscape' ? 'horizontal' : 'landscape')
+  const screen = document.querySelector<HTMLElement>('.screen')!
   verseRef.textContent = verse.reference
   verseText.textContent = verse.text
   fallbackRef.textContent = verse.reference
   fallbackText.textContent = verse.text
   preview.classList.toggle('is-horizontal', orientation === 'horizontal')
+  screen.classList.toggle('has-image', Boolean(url))
   downloadBtn.disabled = !url
   shareBtn.disabled = false
 

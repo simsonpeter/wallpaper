@@ -33,19 +33,10 @@ body {
 
 #app {
   position: relative;
-  width: min(100%, 430px);
+  width: 100%;
   height: 100dvh;
-  max-height: 100dvh;
   overflow: hidden;
   background: var(--ink);
-}
-
-@media (min-width: 560px) {
-  #app {
-    height: min(100dvh - 24px, 860px);
-    border-radius: 32px;
-    box-shadow: 0 0 0 1px #2a261f, 0 30px 80px rgba(0, 0, 0, 0.55);
-  }
 }
 
 .screen {
@@ -56,21 +47,17 @@ body {
 .preview {
   margin: 0;
   position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(120% 80% at 50% 20%, #3a3224 0%, #15130f 55%, #0b0a08 100%);
+  inset: 0 0 calc(76px + var(--safe-bottom)) 0;
+  background: #050505;
   overflow: hidden;
 }
 
 .preview img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.preview.is-horizontal img {
+  object-fit: contain;
   object-position: center;
+  display: block;
 }
 
 .preview-fallback {
@@ -115,7 +102,11 @@ body {
   justify-content: space-between;
   gap: 12px;
   padding: calc(var(--safe-top) + 8px) 16px 12px;
-  background: linear-gradient(to bottom, rgba(11, 10, 8, 0.72), transparent);
+  pointer-events: none;
+}
+
+.app-bar .segment {
+  pointer-events: auto;
 }
 
 .app-name {
@@ -155,6 +146,12 @@ body {
   right: 16px;
   bottom: calc(88px + var(--safe-bottom));
   z-index: 3;
+}
+
+.screen.has-image .hud,
+.screen.has-image .app-name,
+.screen.has-image .preview-fallback {
+  display: none;
 }
 
 .verse-chip {
