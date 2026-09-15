@@ -110,13 +110,28 @@
 
         <header class="app-bar">
           <div class="app-bar-actions">
+            <div class="segment" role="tablist" aria-label="Language">
+              <button type="button" class="lang-btn is-active" data-lang="ta">TA</button>
+              <button type="button" class="lang-btn" data-lang="en">EN</button>
+            </div>
             <button type="button" class="install-btn" id="install-btn" hidden>Install</button>
             <div class="segment" role="tablist" aria-label="Wallpaper orientation">
               <button type="button" class="orient is-active" data-orientation="landscape">Landscape</button>
               <button type="button" class="orient" data-orientation="portrait">Portrait</button>
             </div>
+            <div class="segment crop-segment" role="tablist" aria-label="Portrait crop" hidden>
+              <button type="button" class="crop-btn is-active" data-crop="home">Home</button>
+              <button type="button" class="crop-btn" data-crop="lock">Lock</button>
+            </div>
+            <button type="button" class="more-btn" id="more-btn" aria-label="More">More</button>
           </div>
         </header>
+
+        <button type="button" class="fav-btn" id="fav-btn" aria-label="Favorite" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 20s-7-4.3-7-9.2A4.2 4.2 0 0 1 12 7a4.2 4.2 0 0 1 7 3.8C19 15.7 12 20 12 20z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" />
+          </svg>
+        </button>
 
         <button type="button" class="nav-btn prev" id="prev-btn" aria-label="Previous verse">
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -172,6 +187,12 @@
           <h1>Choose verse</h1>
           <a class="catalog-link" id="catalog-link" href="#" target="_blank" rel="noreferrer">Links</a>
         </div>
+        <div class="segment list-tabs" role="tablist" aria-label="Verse lists">
+          <button type="button" class="list-tab is-active" data-tab="all">All</button>
+          <button type="button" class="list-tab" data-tab="favorites">Favorites</button>
+          <button type="button" class="list-tab" data-tab="today">Today</button>
+        </div>
+        <div class="chip-row" id="filter-row"></div>
         <label class="search">
           <span class="sr-only">Search verses</span>
           <input id="search" type="search" placeholder="Search John 3:16..." enterkeyhint="search" />
@@ -186,7 +207,30 @@
         <p>Share</p>
         <button type="button" id="share-text-btn">Text only</button>
         <button type="button" id="share-image-btn">Image only</button>
+        <button type="button" id="share-link-btn">Copy app link</button>
         <button type="button" class="share-cancel" id="share-cancel-btn">Cancel</button>
+      </div>
+
+      <div class="share-sheet more-sheet" id="more-sheet" hidden>
+        <p>More</p>
+        <button type="button" id="votd-btn">Verse of the day</button>
+        <button type="button" id="shuffle-btn">Shuffle</button>
+        <button type="button" id="copy-verse-btn">Copy Tamil verse</button>
+        <button type="button" id="status-export-btn">Save WhatsApp status</button>
+        <button type="button" id="poster-btn">Save church poster</button>
+        <label class="field">
+          <span>Church name</span>
+          <input id="church-input" type="text" maxlength="80" />
+        </label>
+        <p>Auto-rotate</p>
+        <div class="segment rotate-segment" role="tablist" aria-label="Auto-rotate">
+          <button type="button" class="rotate-btn is-active" data-hours="0">Off</button>
+          <button type="button" class="rotate-btn" data-hours="1">1h</button>
+          <button type="button" class="rotate-btn" data-hours="3">3h</button>
+          <button type="button" class="rotate-btn" data-hours="6">6h</button>
+        </div>
+        <button type="button" class="toggle-btn" id="notify-btn">Daily notification: Off</button>
+        <button type="button" class="share-cancel" id="more-close-btn">Close</button>
       </div>
 
       <div class="share-sheet wallpaper-sheet" id="wallpaper-sheet" hidden>

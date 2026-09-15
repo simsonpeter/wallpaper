@@ -5,16 +5,68 @@
     {
       "id": "philipians.4:4",
       "reference": "பிலிப்பியர்.4:4",
+      "referenceEn": "Philippians 4:4",
       "text": "கர்த்தருக்குள் எப்பொழுதும் சந்தோஷமாயிருங்கள்; சந்தோஷமாயிருங்கள் என்று மறுபடியும் சொல்லுகிறேன்.",
+      "textEn": "Rejoice in the Lord always; again I will say, rejoice.",
+      "book": "Philippians",
+      "topics": ["joy"],
       "landscape": "https://raw.githubusercontent.com/simsonpeter/wallpaper/refs/heads/main/public/images/landscape/IMG-20260915-WA0001.jpg",
       "portrait": "https://raw.githubusercontent.com/simsonpeter/wallpaper/refs/heads/main/public/images/portrait/1789493698706.png"
     },
     {
       "id": "psalm.34:14",
       "reference": "சங்கீதம் 34:14",
+      "referenceEn": "Psalm 34:14",
       "text": "தீமையை விட்டு விலகி, நன்மைசெய்; சமாதானத்தைத் தேடி, அதைத் தொடர்ந்துகொள்.",
+      "textEn": "Turn away from evil and do good; seek peace and pursue it.",
+      "book": "Psalms",
+      "topics": ["peace"],
       "landscape": "https://raw.githubusercontent.com/simsonpeter/wallpaper/refs/heads/main/public/images/landscape/file_00000000c3d482309e1ffcc81cbe7887.png",
       "portrait": "https://raw.githubusercontent.com/simsonpeter/wallpaper/refs/heads/main/public/images/portrait/file_00000000883881f4973ca513ee62fad4.png"
+    },
+    {
+      "id": "john.3:16",
+      "reference": "யோவான் 3:16",
+      "referenceEn": "John 3:16",
+      "text": "தேவன் உலகத்தை அவ்வளவாய் அன்புகூர்ந்தபடியால், தம்முடைய ஒரேபேறான குமாரனை விசுவாசிக்கிறவன் எவனோ அவன் கெட்டுப்போகாமல் நித்தியஜீவனை அடையும்படிக்கு, அவரைத் தந்தருளினார்.",
+      "textEn": "For God so loved the world, that he gave his only Son, that whoever believes in him should not perish but have eternal life.",
+      "book": "John",
+      "topics": ["love", "hope"],
+      "landscape": "",
+      "portrait": ""
+    },
+    {
+      "id": "psalm.23:1",
+      "reference": "சங்கீதம் 23:1",
+      "referenceEn": "Psalm 23:1",
+      "text": "கர்த்தர் என் மேய்ப்பர், எனக்குக் குறைவில்லை.",
+      "textEn": "The Lord is my shepherd; I shall not want.",
+      "book": "Psalms",
+      "topics": ["trust", "peace"],
+      "landscape": "",
+      "portrait": ""
+    },
+    {
+      "id": "isaiah.41:10",
+      "reference": "ஏசாயா 41:10",
+      "referenceEn": "Isaiah 41:10",
+      "text": "நீ பயப்படாதே, நான் உன்னுடனே இருக்கிறேன்; திகையாதே, நான் உன் தேவன்; நான் உன்னைத் திடப்படுத்தி, உனக்குச் சகாயம்பண்ணி, என் நீதியுள்ள வலதுகரத்தினால் உன்னைத் தாங்குவேன்.",
+      "textEn": "Fear not, for I am with you; be not dismayed, for I am your God. I will strengthen you, I will help you, I will uphold you with my righteous right hand.",
+      "book": "Isaiah",
+      "topics": ["strength", "trust"],
+      "landscape": "",
+      "portrait": ""
+    },
+    {
+      "id": "jeremiah.29:11",
+      "reference": "எரேமியா 29:11",
+      "referenceEn": "Jeremiah 29:11",
+      "text": "நான் உங்களைக் குறித்து நினைத்திருக்கிற நினைவுகளை அறிவேன்; அவைகள் பொல்லாப்புக்கு அல்ல, சமாதானத்துக்கு ஏதுவான நினைவுகள்; நீங்கள் எதிர்பார்த்திருக்கிற முடிவை உங்களுக்குக் கொடுக்கிறதற்கேற்ற நினைவுகளேயென்று கர்த்தர் சொல்லுகிறார்.",
+      "textEn": "For I know the plans I have for you, declares the Lord, plans for welfare and not for evil, to give you a future and a hope.",
+      "book": "Jeremiah",
+      "topics": ["hope"],
+      "landscape": "",
+      "portrait": ""
     }
   ]
 }
