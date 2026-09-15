@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verse Wallpapers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Verse Wallpapers</p>
+          <h1>Select a verse</h1>
+        </div>
+        <a class="source-link" id="catalog-link" href="#" target="_blank" rel="noreferrer">
+          Edit links on GitHub
+        </a>
+      </header>
+
+      <main class="layout">
+        <section class="panel list-panel" aria-label="Verse list">
+          <label class="search">
+            <span class="sr-only">Search verses</span>
+            <input id="search" type="search" placeholder="Search John 3:16, hope, shepherd..." />
+          </label>
+          <p class="status" id="status">Loading catalog from GitHub...</p>
+          <ul class="verse-list" id="verse-list"></ul>
+        </section>
+
+        <section class="panel preview-panel" aria-label="Wallpaper preview">
+          <div class="orientation-toggle" role="tablist" aria-label="Wallpaper orientation">
+            <button type="button" class="orient is-active" data-orientation="landscape">
+              Landscape
+            </button>
+            <button type="button" class="orient" data-orientation="horizontal">Horizontal</button>
+          </div>
+
+          <figure class="preview" id="preview">
+            <img id="preview-image" alt="" hidden />
+            <div class="preview-fallback" id="preview-fallback">
+              <p class="fallback-ref" id="fallback-ref"></p>
+              <blockquote id="fallback-text"></blockquote>
+              <p class="fallback-note" id="fallback-note">
+                Paste a direct image URL in the GitHub catalog to show this wallpaper.
+              </p>
+            </div>
+          </figure>
+
+          <div class="verse-meta">
+            <h2 id="verse-ref">Choose a verse</h2>
+            <p id="verse-text">Pick a verse from the list to preview, download, or share.</p>
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="download-btn" disabled>Download wallpaper</button>
+            <button type="button" class="ghost" id="share-btn" disabled>Share</button>
+          </div>
+          <p class="toast" id="toast" hidden></p>
+        </section>
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
