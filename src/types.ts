@@ -1,11 +1,11 @@
-export type Orientation = 'landscape' | 'horizontal'
+export type Orientation = 'landscape' | 'portrait'
 
 export type VerseWallpaper = {
   id: string
   reference: string
   text: string
   landscape: string
-  horizontal: string
+  portrait: string
 }
 
 export type WallpaperCatalog = {

@@ -9,7 +9,10 @@ function isFilled(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0
 }
 
-function normalizeVerse(raw: Partial<VerseWallpaper>, index: number): VerseWallpaper {
+function normalizeVerse(
+  raw: Partial<VerseWallpaper> & { horizontal?: string },
+  index: number,
+): VerseWallpaper {
   const reference = isFilled(raw.reference) ? raw.reference.trim() : `Verse ${index + 1}`
   const id =
     isFilled(raw.id)
@@ -18,13 +21,18 @@ function normalizeVerse(raw: Partial<VerseWallpaper>, index: number): VerseWallp
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '')
+  const portrait = isFilled(raw.portrait)
+    ? raw.portrait.trim()
+    : isFilled(raw.horizontal)
+      ? raw.horizontal.trim()
+      : ''
 
   return {
     id,
     reference,
     text: isFilled(raw.text) ? raw.text.trim() : '',
     landscape: isFilled(raw.landscape) ? raw.landscape.trim() : '',
-    horizontal: isFilled(raw.horizontal) ? raw.horizontal.trim() : '',
+    portrait,
   }
 }
 
@@ -68,7 +76,7 @@ export async function loadCatalog(): Promise<{
 }
 
 export function wallpaperUrl(verse: VerseWallpaper, orientation: Orientation): string {
-  return orientation === 'landscape' ? verse.landscape : verse.horizontal
+  return orientation === 'landscape' ? verse.landscape : verse.portrait
 }
 
 export function fileNameFor(verse: VerseWallpaper, orientation: Orientation, url: string): string {

@@ -29,7 +29,7 @@ catalogLink.href = GITHUB_REPO_URL
 let verses: VerseWallpaper[] = []
 let selectedId = params.get('v') ?? ''
 let orientation: Orientation =
-  params.get('o') === 'horizontal' ? 'horizontal' : 'landscape'
+  params.get('o') === 'portrait' || params.get('o') === 'horizontal' ? 'portrait' : 'landscape'
 let toastTimer = 0
 
 function selectedVerse(): VerseWallpaper | undefined {
@@ -94,13 +94,13 @@ function renderPreview() {
   }
 
   selectedId = verse.id
-  const url = wallpaperUrl(verse, orientation) || wallpaperUrl(verse, orientation === 'landscape' ? 'horizontal' : 'landscape')
+  const url = wallpaperUrl(verse, orientation) || wallpaperUrl(verse, orientation === 'landscape' ? 'portrait' : 'landscape')
   const screen = document.querySelector<HTMLElement>('.screen')!
   verseRef.textContent = verse.reference
   verseText.textContent = verse.text
   fallbackRef.textContent = verse.reference
   fallbackText.textContent = verse.text
-  preview.classList.toggle('is-horizontal', orientation === 'horizontal')
+  preview.classList.toggle('is-portrait', orientation === 'portrait')
   screen.classList.toggle('has-image', Boolean(url))
   downloadBtn.disabled = !url
   shareBtn.disabled = false
@@ -214,7 +214,7 @@ searchInput.addEventListener('input', () => {
 
 document.querySelectorAll<HTMLButtonElement>('.orient').forEach((button) => {
   button.addEventListener('click', () => {
-    orientation = button.dataset.orientation === 'horizontal' ? 'horizontal' : 'landscape'
+    orientation = button.dataset.orientation === 'portrait' ? 'portrait' : 'landscape'
     renderPreview()
   })
 })
