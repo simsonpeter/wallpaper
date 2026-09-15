@@ -3,68 +3,83 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verse Wallpapers</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#0b0a08" />
+    <title>Verse Walls</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Outfit:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Outfit:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
   </head>
   <body>
     <div id="app">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">Verse Wallpapers</p>
-          <h1>Select a verse</h1>
-        </div>
-        <a class="source-link" id="catalog-link" href="#" target="_blank" rel="noreferrer">
-          Edit links on GitHub
-        </a>
-      </header>
+      <main class="screen">
+        <figure class="preview" id="preview">
+          <img id="preview-image" alt="" hidden />
+          <div class="preview-fallback" id="preview-fallback">
+            <p class="fallback-ref" id="fallback-ref"></p>
+            <blockquote id="fallback-text"></blockquote>
+            <p class="fallback-note" id="fallback-note">Add a wallpaper link to preview this verse.</p>
+          </div>
+        </figure>
 
-      <main class="layout">
-        <section class="panel list-panel" aria-label="Verse list">
-          <label class="search">
-            <span class="sr-only">Search verses</span>
-            <input id="search" type="search" placeholder="Search John 3:16, hope, shepherd..." />
-          </label>
-          <p class="status" id="status">Loading catalog from GitHub...</p>
-          <ul class="verse-list" id="verse-list"></ul>
-        </section>
-
-        <section class="panel preview-panel" aria-label="Wallpaper preview">
-          <div class="orientation-toggle" role="tablist" aria-label="Wallpaper orientation">
-            <button type="button" class="orient is-active" data-orientation="landscape">
-              Landscape
-            </button>
+        <header class="app-bar">
+          <p class="app-name">Verse Walls</p>
+          <div class="segment" role="tablist" aria-label="Wallpaper orientation">
+            <button type="button" class="orient is-active" data-orientation="landscape">Landscape</button>
             <button type="button" class="orient" data-orientation="horizontal">Horizontal</button>
           </div>
+        </header>
 
-          <figure class="preview" id="preview">
-            <img id="preview-image" alt="" hidden />
-            <div class="preview-fallback" id="preview-fallback">
-              <p class="fallback-ref" id="fallback-ref"></p>
-              <blockquote id="fallback-text"></blockquote>
-              <p class="fallback-note" id="fallback-note">
-                Paste a direct image URL in the GitHub catalog to show this wallpaper.
-              </p>
-            </div>
-          </figure>
-
-          <div class="verse-meta">
-            <h2 id="verse-ref">Choose a verse</h2>
-            <p id="verse-text">Pick a verse from the list to preview, download, or share.</p>
+        <section class="hud" aria-label="Wallpaper actions">
+          <div class="verse-chip">
+            <p id="verse-ref">Choose a verse</p>
+            <p id="verse-text">Pick a verse to preview, download, or share.</p>
           </div>
-
-          <div class="actions">
-            <button type="button" class="primary" id="download-btn" disabled>Download wallpaper</button>
-            <button type="button" class="ghost" id="share-btn" disabled>Share</button>
-          </div>
-          <p class="toast" id="toast" hidden></p>
         </section>
+
+        <nav class="dock">
+          <button type="button" class="dock-btn" id="verses-btn">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 6h12M6 12h12M6 18h8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+            Verses
+          </button>
+          <button type="button" class="dock-btn primary" id="download-btn" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 4v11m0 0 4.5-4.5M12 15 7.5 10.5M5 20h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Save
+          </button>
+          <button type="button" class="dock-btn" id="share-btn" disabled>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 12a3 3 0 1 1-3-3m3 3 8-4.5m0 0a3 3 0 1 1 3-3m-3 3v9.5a3 3 0 1 1-3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+            </svg>
+            Share
+          </button>
+        </nav>
       </main>
+
+      <div class="sheet-backdrop" id="sheet-backdrop" hidden></div>
+      <section class="sheet" id="sheet" aria-label="Choose verse" aria-hidden="true" inert>
+        <button type="button" class="sheet-handle" id="sheet-close" aria-label="Close verse list"></button>
+        <div class="sheet-head">
+          <h1>Choose verse</h1>
+          <a class="catalog-link" id="catalog-link" href="#" target="_blank" rel="noreferrer">Links</a>
+        </div>
+        <label class="search">
+          <span class="sr-only">Search verses</span>
+          <input id="search" type="search" placeholder="Search John 3:16..." enterkeyhint="search" />
+        </label>
+        <p class="status" id="status">Loading...</p>
+        <ul class="verse-list" id="verse-list"></ul>
+      </section>
+
+      <p class="toast" id="toast" hidden></p>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

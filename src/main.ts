@@ -18,6 +18,10 @@ const verseRef = document.querySelector<HTMLElement>('#verse-ref')!
 const verseText = document.querySelector<HTMLElement>('#verse-text')!
 const downloadBtn = document.querySelector<HTMLButtonElement>('#download-btn')!
 const shareBtn = document.querySelector<HTMLButtonElement>('#share-btn')!
+const versesBtn = document.querySelector<HTMLButtonElement>('#verses-btn')!
+const sheet = document.querySelector<HTMLElement>('#sheet')!
+const sheetBackdrop = document.querySelector<HTMLElement>('#sheet-backdrop')!
+const sheetClose = document.querySelector<HTMLButtonElement>('#sheet-close')!
 const toast = document.querySelector<HTMLParagraphElement>('#toast')!
 
 catalogLink.href = GITHUB_REPO_URL
@@ -26,19 +30,28 @@ let verses: VerseWallpaper[] = []
 let selectedId = params.get('v') ?? ''
 let orientation: Orientation =
   params.get('o') === 'horizontal' ? 'horizontal' : 'landscape'
+let toastTimer = 0
 
 function selectedVerse(): VerseWallpaper | undefined {
   return verses.find((verse) => verse.id === selectedId) ?? verses[0]
 }
 
 function snippet(text: string): string {
-  return text.length > 92 ? `${text.slice(0, 89).trim()}...` : text
+  return text.length > 88 ? `${text.slice(0, 85).trim()}...` : text
+}
+
+function setSheetOpen(open: boolean) {
+  sheet.classList.toggle('is-open', open)
+  sheet.inert = !open
+  sheet.setAttribute('aria-hidden', open ? 'false' : 'true')
+  sheetBackdrop.hidden = !open
 }
 
 function showToast(message: string) {
   toast.hidden = false
   toast.textContent = message
-  window.setTimeout(() => {
+  window.clearTimeout(toastTimer)
+  toastTimer = window.setTimeout(() => {
     toast.hidden = true
   }, 2400)
 }
@@ -104,7 +117,7 @@ function renderPreview() {
     previewImage.hidden = true
     previewImage.removeAttribute('src')
     previewFallback.hidden = false
-    fallbackNote.textContent = `Paste a direct ${orientation} image URL for ${verse.reference} in the GitHub catalog.`
+    fallbackNote.textContent = `Add a ${orientation} image link for ${verse.reference}.`
   }
 
   renderList(searchInput.value)
@@ -137,7 +150,7 @@ async function downloadWallpaper() {
     link.download = filename
     link.click()
     URL.revokeObjectURL(objectUrl)
-    showToast('Download started.')
+    showToast('Saved to downloads.')
   } catch {
     const link = document.createElement('a')
     link.href = url
@@ -145,7 +158,7 @@ async function downloadWallpaper() {
     link.target = '_blank'
     link.rel = 'noreferrer'
     link.click()
-    showToast('Opened the wallpaper link.')
+    showToast('Opened wallpaper.')
   }
 }
 
@@ -157,10 +170,9 @@ async function shareWallpaper() {
 
   const imageUrl = wallpaperUrl(verse, orientation)
   const pageUrl = new URL(location.href)
-  const shareText = `${verse.reference} — ${verse.text}`
   const payload = {
     title: `${verse.reference} wallpaper`,
-    text: shareText,
+    text: `${verse.reference} — ${verse.text}`,
     url: imageUrl || pageUrl.toString(),
   }
 
@@ -191,6 +203,7 @@ verseList.addEventListener('click', (event) => {
   }
   selectedId = button.dataset.id
   renderPreview()
+  setSheetOpen(false)
 })
 
 searchInput.addEventListener('input', () => {
@@ -212,15 +225,24 @@ shareBtn.addEventListener('click', () => {
   void shareWallpaper()
 })
 
+versesBtn.addEventListener('click', () => {
+  setSheetOpen(true)
+})
+
+sheetBackdrop.addEventListener('click', () => {
+  setSheetOpen(false)
+})
+
+sheetClose.addEventListener('click', () => {
+  setSheetOpen(false)
+})
+
 try {
-  const { catalog, source } = await loadCatalog()
+  const { catalog } = await loadCatalog()
   verses = catalog.verses
-  statusEl.textContent =
-    source === 'github'
-      ? `${verses.length} verses loaded from GitHub`
-      : `${verses.length} verses loaded from the local catalog`
+  statusEl.textContent = `${verses.length} verses`
   renderPreview()
 } catch (error) {
   statusEl.textContent =
-    error instanceof Error ? error.message : 'Could not load the wallpaper catalog.'
+    error instanceof Error ? error.message : 'Could not load verses.'
 }
