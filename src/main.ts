@@ -18,6 +18,10 @@ const verseRef = document.querySelector<HTMLElement>('#verse-ref')!
 const verseText = document.querySelector<HTMLElement>('#verse-text')!
 const downloadBtn = document.querySelector<HTMLButtonElement>('#download-btn')!
 const shareBtn = document.querySelector<HTMLButtonElement>('#share-btn')!
+const shareSheet = document.querySelector<HTMLElement>('#share-sheet')!
+const shareTextBtn = document.querySelector<HTMLButtonElement>('#share-text-btn')!
+const shareImageBtn = document.querySelector<HTMLButtonElement>('#share-image-btn')!
+const shareCancelBtn = document.querySelector<HTMLButtonElement>('#share-cancel-btn')!
 const versesBtn = document.querySelector<HTMLButtonElement>('#verses-btn')!
 const prevBtn = document.querySelector<HTMLButtonElement>('#prev-btn')!
 const nextBtn = document.querySelector<HTMLButtonElement>('#next-btn')!
@@ -68,6 +72,19 @@ function setSheetOpen(open: boolean) {
   sheetBackdrop.hidden = !open
 }
 
+function currentImageUrl(verse: VerseWallpaper): string {
+  return wallpaperUrl(verse, orientation) || wallpaperUrl(verse, orientation === 'landscape' ? 'portrait' : 'landscape')
+}
+
+function setShareOpen(open: boolean) {
+  shareSheet.hidden = !open
+  if (open) {
+    sheetBackdrop.hidden = false
+  } else if (!sheet.classList.contains('is-open')) {
+    sheetBackdrop.hidden = true
+  }
+}
+
 function showToast(message: string) {
   toast.hidden = false
   toast.textContent = message
@@ -115,7 +132,7 @@ function renderPreview() {
   }
 
   selectedId = verse.id
-  const url = wallpaperUrl(verse, orientation) || wallpaperUrl(verse, orientation === 'landscape' ? 'portrait' : 'landscape')
+  const url = currentImageUrl(verse)
   const screen = document.querySelector<HTMLElement>('.screen')!
   verseRef.textContent = verse.reference
   verseText.textContent = verse.text
@@ -155,7 +172,7 @@ async function downloadWallpaper() {
     return
   }
 
-  const url = wallpaperUrl(verse, orientation)
+  const url = currentImageUrl(verse)
   if (!url) {
     showToast('Add an image link first.')
     return
@@ -187,37 +204,85 @@ async function downloadWallpaper() {
   }
 }
 
-async function shareWallpaper() {
+async function sharePayload(payload: ShareData) {
+  if (navigator.share) {
+    try {
+      await navigator.share(payload)
+      return true
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return true
+      }
+    }
+  }
+  return false
+}
+
+async function shareTextOnly() {
   const verse = selectedVerse()
   if (!verse) {
     return
   }
 
-  const imageUrl = wallpaperUrl(verse, orientation)
-  const pageUrl = new URL(location.href)
-  const payload = {
-    title: `${verse.reference} wallpaper`,
-    text: `${verse.reference} — ${verse.text}`,
-    url: imageUrl || pageUrl.toString(),
+  const text = `${verse.reference}\n${verse.text}`
+  setShareOpen(false)
+
+  if (await sharePayload({ text })) {
+    return
   }
 
-  if (navigator.share) {
-    try {
-      await navigator.share(payload)
-      return
-    } catch (error) {
-      if (error instanceof DOMException && error.name === 'AbortError') {
-        return
-      }
-    }
-  }
-
-  const copied = imageUrl || pageUrl.toString()
   try {
-    await navigator.clipboard.writeText(copied)
-    showToast('Link copied.')
+    await navigator.clipboard.writeText(text)
+    showToast('Text copied.')
   } catch {
-    showToast(copied)
+    showToast(text)
+  }
+}
+
+async function shareImageOnly() {
+  const verse = selectedVerse()
+  if (!verse) {
+    return
+  }
+
+  const imageUrl = currentImageUrl(verse)
+  if (!imageUrl) {
+    showToast('Add an image link first.')
+    return
+  }
+
+  setShareOpen(false)
+  const filename = fileNameFor(verse, orientation, imageUrl)
+  const fetchUrl = imageUrl.replace(
+    /^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/(?:refs\/heads\/)?([^/]+)\/(.+)$/,
+    'https://cdn.jsdelivr.net/gh/$1/$2@$3/$4',
+  )
+
+  try {
+    const response = await fetch(fetchUrl)
+    if (!response.ok) {
+      throw new Error('Could not load image')
+    }
+    const blob = await response.blob()
+    const file = new File([blob], filename, { type: blob.type || 'image/jpeg' })
+    const fileShare = { files: [file] }
+
+    if (navigator.canShare?.(fileShare) && (await sharePayload(fileShare))) {
+      return
+    }
+  } catch {
+    // Fall through to the image URL.
+  }
+
+  if (await sharePayload({ url: imageUrl })) {
+    return
+  }
+
+  try {
+    await navigator.clipboard.writeText(imageUrl)
+    showToast('Image link copied.')
+  } catch {
+    showToast(imageUrl)
   }
 }
 
@@ -247,10 +312,25 @@ downloadBtn.addEventListener('click', () => {
 })
 
 shareBtn.addEventListener('click', () => {
-  void shareWallpaper()
+  const verse = selectedVerse()
+  shareImageBtn.disabled = !verse || !currentImageUrl(verse)
+  setShareOpen(true)
+})
+
+shareTextBtn.addEventListener('click', () => {
+  void shareTextOnly()
+})
+
+shareImageBtn.addEventListener('click', () => {
+  void shareImageOnly()
+})
+
+shareCancelBtn.addEventListener('click', () => {
+  setShareOpen(false)
 })
 
 versesBtn.addEventListener('click', () => {
+  setShareOpen(false)
   setSheetOpen(true)
 })
 
@@ -263,7 +343,11 @@ nextBtn.addEventListener('click', () => {
 })
 
 document.addEventListener('keydown', (event) => {
-  if (sheet.classList.contains('is-open') || event.target instanceof HTMLInputElement) {
+  if (
+    sheet.classList.contains('is-open') ||
+    !shareSheet.hidden ||
+    event.target instanceof HTMLInputElement
+  ) {
     return
   }
   if (event.key === 'ArrowLeft') {
@@ -276,6 +360,7 @@ document.addEventListener('keydown', (event) => {
 
 sheetBackdrop.addEventListener('click', () => {
   setSheetOpen(false)
+  setShareOpen(false)
 })
 
 sheetClose.addEventListener('click', () => {

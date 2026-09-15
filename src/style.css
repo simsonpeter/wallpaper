@@ -376,6 +376,51 @@ h1 {
   line-height: 1.35;
 }
 
+.share-sheet {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: calc(88px + var(--safe-bottom));
+  z-index: 7;
+  display: grid;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #161410;
+  border: 1px solid var(--line);
+}
+
+.share-sheet[hidden] {
+  display: none;
+}
+
+.share-sheet p {
+  margin: 0 0 4px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.share-sheet button {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  background: #0f0e0b;
+  color: var(--cream);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 14px 12px;
+}
+
+.share-sheet .share-cancel {
+  background: transparent;
+  color: var(--muted);
+}
+
+.share-sheet button:disabled {
+  opacity: 0.38;
+}
+
 .toast {
   position: absolute;
   left: 50%;
