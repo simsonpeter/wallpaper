@@ -26,6 +26,10 @@ const toast = document.querySelector<HTMLParagraphElement>('#toast')!
 
 catalogLink.href = GITHUB_REPO_URL
 
+document.addEventListener('contextmenu', (event) => {
+  event.preventDefault()
+})
+
 let verses: VerseWallpaper[] = []
 let selectedId = params.get('v') ?? ''
 let orientation: Orientation =
