@@ -19,6 +19,8 @@ const verseText = document.querySelector<HTMLElement>('#verse-text')!
 const downloadBtn = document.querySelector<HTMLButtonElement>('#download-btn')!
 const shareBtn = document.querySelector<HTMLButtonElement>('#share-btn')!
 const versesBtn = document.querySelector<HTMLButtonElement>('#verses-btn')!
+const prevBtn = document.querySelector<HTMLButtonElement>('#prev-btn')!
+const nextBtn = document.querySelector<HTMLButtonElement>('#next-btn')!
 const sheet = document.querySelector<HTMLElement>('#sheet')!
 const sheetBackdrop = document.querySelector<HTMLElement>('#sheet-backdrop')!
 const sheetClose = document.querySelector<HTMLButtonElement>('#sheet-close')!
@@ -38,6 +40,21 @@ let toastTimer = 0
 
 function selectedVerse(): VerseWallpaper | undefined {
   return verses.find((verse) => verse.id === selectedId) ?? verses[0]
+}
+
+function selectedIndex(): number {
+  const index = verses.findIndex((verse) => verse.id === selectedId)
+  return index >= 0 ? index : 0
+}
+
+function goToVerse(step: number) {
+  if (verses.length === 0) {
+    return
+  }
+
+  const nextIndex = (selectedIndex() + step + verses.length) % verses.length
+  selectedId = verses[nextIndex]?.id ?? selectedId
+  renderPreview()
 }
 
 function snippet(text: string): string {
@@ -108,6 +125,8 @@ function renderPreview() {
   screen.classList.toggle('has-image', Boolean(url))
   downloadBtn.disabled = !url
   shareBtn.disabled = false
+  prevBtn.disabled = verses.length < 2
+  nextBtn.disabled = verses.length < 2
 
   document.querySelectorAll<HTMLButtonElement>('.orient').forEach((button) => {
     button.classList.toggle('is-active', button.dataset.orientation === orientation)
@@ -233,6 +252,26 @@ shareBtn.addEventListener('click', () => {
 
 versesBtn.addEventListener('click', () => {
   setSheetOpen(true)
+})
+
+prevBtn.addEventListener('click', () => {
+  goToVerse(-1)
+})
+
+nextBtn.addEventListener('click', () => {
+  goToVerse(1)
+})
+
+document.addEventListener('keydown', (event) => {
+  if (sheet.classList.contains('is-open') || event.target instanceof HTMLInputElement) {
+    return
+  }
+  if (event.key === 'ArrowLeft') {
+    goToVerse(-1)
+  }
+  if (event.key === 'ArrowRight') {
+    goToVerse(1)
+  }
 })
 
 sheetBackdrop.addEventListener('click', () => {
