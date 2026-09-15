@@ -99,7 +99,7 @@ body {
   z-index: 3;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 12px;
   padding: calc(var(--safe-top) + 8px) 16px 12px;
   pointer-events: none;
@@ -110,25 +110,6 @@ body {
   align-items: center;
   gap: 8px;
   pointer-events: auto;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.app-logo {
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  object-fit: cover;
-}
-
-.app-name {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 600;
 }
 
 .install-btn {
@@ -176,7 +157,6 @@ body {
 }
 
 .screen.has-image .hud,
-.screen.has-image .app-name,
 .screen.has-image .preview-fallback {
   display: none;
 }
