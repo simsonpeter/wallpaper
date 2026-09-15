@@ -2,12 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="icon" type="image/png" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="TCW" />
+    <meta name="application-name" content="TCW" />
     <meta name="theme-color" content="#0b0a08" />
-    <title>Verse Walls</title>
+    <title>TCW</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,10 +33,16 @@
         </figure>
 
         <header class="app-bar">
-          <p class="app-name">Verse Walls</p>
-          <div class="segment" role="tablist" aria-label="Wallpaper orientation">
-            <button type="button" class="orient is-active" data-orientation="landscape">Landscape</button>
-            <button type="button" class="orient" data-orientation="portrait">Portrait</button>
+          <div class="brand">
+            <img class="app-logo" src="./icons/logo.png" alt="TCW" />
+            <p class="app-name">TCW</p>
+          </div>
+          <div class="app-bar-actions">
+            <button type="button" class="install-btn" id="install-btn" hidden>Install</button>
+            <div class="segment" role="tablist" aria-label="Wallpaper orientation">
+              <button type="button" class="orient is-active" data-orientation="landscape">Landscape</button>
+              <button type="button" class="orient" data-orientation="portrait">Portrait</button>
+            </div>
           </div>
         </header>
 

@@ -105,14 +105,41 @@ body {
   pointer-events: none;
 }
 
-.app-bar .segment {
+.app-bar .app-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   pointer-events: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  object-fit: cover;
 }
 
 .app-name {
   margin: 0;
   font-size: 15px;
   font-weight: 600;
+}
+
+.install-btn {
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  background: var(--gold);
+  color: #1a140c;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 12px;
 }
 
 .segment {

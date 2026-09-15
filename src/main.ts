@@ -29,6 +29,7 @@ const sheet = document.querySelector<HTMLElement>('#sheet')!
 const sheetBackdrop = document.querySelector<HTMLElement>('#sheet-backdrop')!
 const sheetClose = document.querySelector<HTMLButtonElement>('#sheet-close')!
 const toast = document.querySelector<HTMLParagraphElement>('#toast')!
+const installBtn = document.querySelector<HTMLButtonElement>('#install-btn')!
 
 catalogLink.href = GITHUB_REPO_URL
 
@@ -366,6 +367,32 @@ sheetBackdrop.addEventListener('click', () => {
 sheetClose.addEventListener('click', () => {
   setSheetOpen(false)
 })
+
+let installPrompt: BeforeInstallPromptEvent | null = null
+
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault()
+  installPrompt = event
+  installBtn.hidden = false
+})
+
+installBtn.addEventListener('click', async () => {
+  if (!installPrompt) {
+    return
+  }
+  await installPrompt.prompt()
+  installPrompt = null
+  installBtn.hidden = true
+})
+
+window.addEventListener('appinstalled', () => {
+  installPrompt = null
+  installBtn.hidden = true
+})
+
+if ('serviceWorker' in navigator) {
+  void navigator.serviceWorker.register('./sw.js')
+}
 
 try {
   const { catalog } = await loadCatalog()
