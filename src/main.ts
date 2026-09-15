@@ -42,6 +42,44 @@ document.addEventListener('contextmenu', (event) => {
   event.preventDefault()
 })
 
+function lockViewport() {
+  const viewport = window.visualViewport
+  const height = Math.round(viewport?.height ?? window.innerHeight)
+  const offsetTop = Math.round(viewport?.offsetTop ?? 0)
+  document.documentElement.style.setProperty('--app-height', `${height}px`)
+  const app = document.getElementById('app')
+  if (app) {
+    app.style.top = `${offsetTop}px`
+    app.style.height = `${height}px`
+  }
+  if (window.scrollY !== 0 || window.scrollX !== 0) {
+    window.scrollTo(0, 0)
+  }
+}
+
+lockViewport()
+window.visualViewport?.addEventListener('resize', lockViewport)
+window.visualViewport?.addEventListener('scroll', lockViewport)
+window.addEventListener('resize', lockViewport)
+window.addEventListener('orientationchange', lockViewport)
+window.addEventListener('scroll', () => window.scrollTo(0, 0), { passive: true })
+
+document.addEventListener(
+  'touchmove',
+  (event) => {
+    const target = event.target
+    if (!(target instanceof Element)) {
+      event.preventDefault()
+      return
+    }
+    if (target.closest('.verse-list, .share-sheet, .search')) {
+      return
+    }
+    event.preventDefault()
+  },
+  { passive: false },
+)
+
 let verses: VerseWallpaper[] = []
 let selectedId = params.get('v') ?? ''
 let orientation: Orientation =
