@@ -1,4 +1,4 @@
-const CACHE = 'tcw-v1'
+const CACHE = 'tcw-v2'
 
 self.addEventListener('install', (event) => {
   event.waitUntil(self.skipWaiting())

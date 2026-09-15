@@ -13,6 +13,17 @@
     <meta name="application-name" content="TCW" />
     <meta name="theme-color" content="#0b0a08" />
     <title>TCW</title>
+    <style>
+      #splash {
+        position: absolute;
+        inset: 0;
+        z-index: 30;
+        display: grid;
+        place-items: center;
+        background: #0b0a08;
+        padding: 24px;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,6 +33,13 @@
   </head>
   <body>
     <div id="app">
+      <div class="splash" id="splash" role="img" aria-label="TCW. By JayathaSoft">
+        <div class="splash-brand">
+          <img class="splash-logo" src="./icons/logo.png" alt="" />
+          <p class="splash-credit">By JayathaSoft</p>
+        </div>
+      </div>
+
       <main class="screen">
         <figure class="preview" id="preview">
           <img id="preview-image" alt="" hidden />

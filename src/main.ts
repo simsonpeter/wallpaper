@@ -35,6 +35,7 @@ const sheetBackdrop = document.querySelector<HTMLElement>('#sheet-backdrop')!
 const sheetClose = document.querySelector<HTMLButtonElement>('#sheet-close')!
 const toast = document.querySelector<HTMLParagraphElement>('#toast')!
 const installBtn = document.querySelector<HTMLButtonElement>('#install-btn')!
+const splash = document.querySelector<HTMLElement>('#splash')!
 
 catalogLink.href = GITHUB_REPO_URL
 
@@ -483,6 +484,27 @@ if ('serviceWorker' in navigator) {
   void navigator.serviceWorker.register('./sw.js')
 }
 
+const splashStarted = Date.now()
+const minSplashMs = 5000
+
+function hideSplash() {
+  if (splash.hidden || splash.classList.contains('is-leaving')) {
+    return
+  }
+  splash.classList.add('is-leaving')
+  splash.setAttribute('aria-hidden', 'true')
+  window.setTimeout(() => {
+    splash.hidden = true
+  }, 500)
+}
+
+function finishSplash() {
+  const wait = Math.max(0, minSplashMs - (Date.now() - splashStarted))
+  window.setTimeout(hideSplash, wait)
+}
+
+window.setTimeout(hideSplash, 10000)
+
 try {
   const { catalog } = await loadCatalog()
   verses = catalog.verses
@@ -491,4 +513,6 @@ try {
 } catch (error) {
   statusEl.textContent =
     error instanceof Error ? error.message : 'Could not load verses.'
+} finally {
+  finishSplash()
 }

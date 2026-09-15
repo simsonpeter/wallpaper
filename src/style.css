@@ -45,6 +45,50 @@ body {
   background: var(--ink);
 }
 
+.splash {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(24px, env(safe-area-inset-bottom));
+  background: #0b0a08;
+  transition: opacity 0.45s ease;
+}
+
+.splash.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.splash[hidden] {
+  display: none;
+}
+
+.splash-brand {
+  display: grid;
+  justify-items: center;
+  gap: clamp(14px, 3vh, 22px);
+  text-align: center;
+}
+
+.splash-logo {
+  width: min(46vw, 38vh, 220px);
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+  display: block;
+  border-radius: 22%;
+}
+
+.splash-credit {
+  margin: 0;
+  color: var(--gold);
+  font-size: clamp(13px, 3.4vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+}
+
 .screen {
   position: relative;
   height: 100%;
@@ -558,6 +602,14 @@ button {
     padding-left: 12px;
     padding-right: 12px;
   }
+
+  .splash-brand {
+    gap: 10px;
+  }
+
+  .splash-logo {
+    width: min(28vh, 120px);
+  }
 }
 
 @media (max-width: 360px) {
@@ -568,5 +620,9 @@ button {
   .install-btn {
     padding: 7px 10px;
     font-size: 11px;
+  }
+
+  .splash-logo {
+    width: min(52vw, 160px);
   }
 }
