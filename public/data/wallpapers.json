@@ -3,10 +3,10 @@
   "description": "Paste direct image URLs into landscape and horizontal. GitHub raw links work: https://raw.githubusercontent.com/simsonpeter/wallpaper/main/public/images/landscape/your-file.jpg",
   "verses": [
     {
-      "id": "john-3-16",
-      "reference": "John 3:16",
-      "text": "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
-      "landscape": "",
+      "id": "philipians.4:4",
+      "reference": "பிலிப்பியர்.4:4",
+      "text": "கர்த்தருக்குள் எப்பொழுதும் சந்தோஷமாயிருங்கள்; சந்தோஷமாயிருங்கள் என்று மறுபடியும் சொல்லுகிறேன்.",
+      "landscape": "https://i.ibb.co/1JTV5wzL/IMG-20260915-WA0001.jpg",
       "horizontal": ""
     },
     {
