@@ -78,6 +78,7 @@ body {
   height: min(46vw, 38vh, 220px);
   max-width: 220px;
   max-height: 220px;
+  background-color: #0b0a08;
 }
 
 .splash-credit {

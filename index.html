@@ -21,7 +21,7 @@
     <link rel="apple-touch-startup-image" href="./splashes/splash-2622x1206.png" media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
     <link rel="apple-touch-startup-image" href="./splashes/splash-1320x2868.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
     <link rel="apple-touch-startup-image" href="./splashes/splash-2868x1320.png" media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)" />
-    <link rel="preload" as="image" href="./icons/splash-logo.png" />
+    <link rel="preload" as="image" href="./icons/splash-logo.png?v=5" />
     <link rel="manifest" href="./manifest.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -67,7 +67,11 @@
         height: min(46vw, 38vh, 220px);
         max-width: 220px;
         max-height: 220px;
-        background: url('./icons/splash-logo.png') center / contain no-repeat;
+        background-color: #0b0a08;
+        background-image: url('./icons/splash-logo.png?v=5');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
       }
       #splash .splash-credit {
         margin: 0;
