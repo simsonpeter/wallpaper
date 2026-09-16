@@ -111,24 +111,12 @@ body {
   display: block;
 }
 
-.preview.is-cover img {
-  object-fit: cover;
-}
-
-.preview.crop-lock img {
-  object-position: center top;
-}
-
-.preview.crop-home img {
-  object-position: center center;
-}
-
 .preview-fallback {
   position: absolute;
   inset: 0;
   display: grid;
   place-content: center;
-  padding: 88px 52px 24px;
+  padding: 72px 20px 24px;
   text-align: center;
   overflow: hidden;
 }
@@ -162,7 +150,7 @@ body {
   right: 0;
   z-index: 3;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-end;
   gap: 8px;
   padding: calc(var(--safe-top) + 6px) 12px 8px;
@@ -179,8 +167,7 @@ body {
   pointer-events: auto;
 }
 
-.install-btn,
-.more-btn {
+.install-btn {
   border: 1px solid var(--gold);
   border-radius: 999px;
   background: var(--gold);
@@ -191,54 +178,16 @@ body {
   padding: 7px 12px;
 }
 
-.more-btn {
+.segment {
+  display: flex;
+  padding: 3px;
+  border-radius: 999px;
   background: rgba(11, 10, 8, 0.45);
-  color: var(--cream);
-  border-color: var(--line);
-}
-
-.fav-btn {
-  position: absolute;
-  top: calc(var(--safe-top) + 58px);
-  left: max(10px, env(safe-area-inset-left));
-  z-index: 4;
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  padding: 0;
   border: 1px solid var(--line);
-  border-radius: 50%;
-  background: rgba(18, 16, 12, 0.72);
-  color: var(--cream);
-  backdrop-filter: blur(18px);
+  backdrop-filter: blur(16px);
 }
 
-.fav-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.fav-btn.is-on {
-  color: #1a140c;
-  background: var(--gold);
-  border-color: var(--gold);
-}
-
-.fav-btn.is-on path {
-  fill: currentColor;
-}
-
-.segment[hidden],
-.crop-segment[hidden] {
-  display: none !important;
-}
-
-.orient,
-.lang-btn,
-.crop-btn,
-.list-tab,
-.rotate-btn {
+.orient {
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -249,11 +198,7 @@ body {
   border-radius: 999px;
 }
 
-.orient.is-active,
-.lang-btn.is-active,
-.crop-btn.is-active,
-.list-tab.is-active,
-.rotate-btn.is-active {
+.orient.is-active {
   background: var(--gold);
   color: #1a140c;
 }
@@ -439,81 +384,6 @@ h1 {
   font-size: 13px;
 }
 
-.list-tabs {
-  margin-bottom: 10px;
-}
-
-.chip-row {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0 0 10px;
-  overscroll-behavior: contain;
-  scrollbar-width: none;
-}
-
-.chip-row::-webkit-scrollbar {
-  display: none;
-}
-
-.chip {
-  flex: 0 0 auto;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: #0f0e0b;
-  color: var(--cream);
-  font: inherit;
-  font-size: 12px;
-  padding: 7px 10px;
-}
-
-.chip.is-active {
-  background: var(--gold);
-  color: #1a140c;
-  border-color: var(--gold);
-}
-
-.verse-warn {
-  display: block;
-  margin-top: 6px;
-  color: var(--gold);
-  font-size: 11px;
-  font-style: normal;
-}
-
-.field {
-  display: grid;
-  gap: 6px;
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.field input {
-  width: 100%;
-  border: 0;
-  border-radius: 16px;
-  background: #0f0e0b;
-  color: var(--cream);
-  font: inherit;
-  font-size: 16px;
-  padding: 13px 14px;
-}
-
-.rotate-segment {
-  width: 100%;
-  justify-content: space-between;
-}
-
-.rotate-segment .rotate-btn {
-  flex: 1;
-  width: auto;
-}
-
-.toggle-btn {
-  text-align: left;
-}
-
 .search input {
   width: 100%;
   border: 0;
@@ -600,7 +470,7 @@ h1 {
   color: var(--muted);
 }
 
-.share-sheet > button {
+.share-sheet button {
   width: 100%;
   border: 0;
   border-radius: 16px;

@@ -9,15 +9,6 @@ function isFilled(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0
 }
 
-function normalizeTopics(value: unknown): string[] {
-  if (!Array.isArray(value)) {
-    return []
-  }
-  return value
-    .filter((topic): topic is string => typeof topic === 'string' && topic.trim().length > 0)
-    .map((topic) => topic.trim().toLowerCase())
-}
-
 function normalizeVerse(
   raw: Partial<VerseWallpaper> & { horizontal?: string },
   index: number,
@@ -40,14 +31,8 @@ function normalizeVerse(
     id,
     reference,
     text: isFilled(raw.text) ? raw.text.trim() : '',
-    referenceEn: isFilled(raw.referenceEn) ? raw.referenceEn.trim() : '',
-    textEn: isFilled(raw.textEn) ? raw.textEn.trim() : '',
-    book: isFilled(raw.book) ? raw.book.trim() : '',
-    topics: normalizeTopics(raw.topics),
     landscape: isFilled(raw.landscape) ? raw.landscape.trim() : '',
     portrait,
-    portraitHome: isFilled(raw.portraitHome) ? raw.portraitHome.trim() : '',
-    portraitLock: isFilled(raw.portraitLock) ? raw.portraitLock.trim() : '',
   }
 }
 
@@ -73,11 +58,6 @@ export async function loadCatalog(): Promise<{
   catalog: WallpaperCatalog
   source: 'github' | 'local'
 }> {
-  if (import.meta.env.DEV) {
-    const catalog = await fetchCatalog(LOCAL_CATALOG_URL)
-    return { catalog, source: 'local' }
-  }
-
   const remoteSources = [GITHUB_CATALOG_URL, JSDELIVR_CATALOG_URL]
 
   for (const url of remoteSources) {
@@ -95,31 +75,13 @@ export async function loadCatalog(): Promise<{
   return { catalog, source: 'local' }
 }
 
-export function wallpaperUrl(
-  verse: VerseWallpaper,
-  orientation: Orientation,
-  crop: 'home' | 'lock' = 'home',
-): string {
-  if (orientation === 'landscape') {
-    return verse.landscape
-  }
-  if (crop === 'lock' && verse.portraitLock) {
-    return verse.portraitLock
-  }
-  if (crop === 'home' && verse.portraitHome) {
-    return verse.portraitHome
-  }
-  return verse.portrait
+export function wallpaperUrl(verse: VerseWallpaper, orientation: Orientation): string {
+  return orientation === 'landscape' ? verse.landscape : verse.portrait
 }
 
-export function fileNameFor(
-  verse: VerseWallpaper,
-  orientation: Orientation,
-  url: string,
-  suffix = '',
-): string {
+export function fileNameFor(verse: VerseWallpaper, orientation: Orientation, url: string): string {
   const cleanPath = url.split('?')[0] ?? url
   const extensionMatch = cleanPath.match(/\.(jpe?g|png|webp|gif|avif)$/i)
-  const extension = suffix ? 'jpg' : (extensionMatch?.[1]?.toLowerCase() ?? 'jpg')
-  return `${verse.id}-${orientation}${suffix}.${extension}`
+  const extension = extensionMatch?.[1]?.toLowerCase() ?? 'jpg'
+  return `${verse.id}-${orientation}.${extension}`
 }
