@@ -1,4 +1,4 @@
-{
+2{
   "title": "Verse Wallpapers",
   "description": "Paste a direct portrait image URL for each verse. GitHub raw links work: https://raw.githubusercontent.com/simsonpeter/wallpaper/main/public/images/portrait/your-file.jpg",
   "verses": [
@@ -6,7 +6,7 @@
       "id": "philipians.4:4",
       "reference": "பிலிப்பியர்.4:4",
       "text": "கர்த்தருக்குள் எப்பொழுதும் சந்தோஷமாயிருங்கள்; சந்தோஷமாயிருங்கள் என்று மறுபடியும் சொல்லுகிறேன்.",
-      "portrait": "https://raw.githubusercontent.com/simsonpeter/wallpaper/refs/heads/main/public/images/portrait/1789493698706.png"
+      "portrait": "https://raw.githubusercontent.com/simsonpeter/wallpaper/refs/heads/main/public/images/portrait/philipians.4_4.jpg"
     },
     {
       "id": "psalm.34:14",
