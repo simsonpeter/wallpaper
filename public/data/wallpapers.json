@@ -2,6 +2,12 @@
   "title": "Verse Wallpapers",
   "description": "Paste a direct portrait image URL for each verse. GitHub raw links work: https://raw.githubusercontent.com/simsonpeter/wallpaper/main/public/images/portrait/your-file.jpg",
   "verses": [
+     {
+      "id": "psalm.46:5",
+      "reference": "சங்கீதம் 46:5",
+      "text": "தேவன் அதின் நடுவில் இருக்கிறார், அது அசையாது; அதிகாலையிலே தேவன் அதற்குச் சகாயம்பண்ணுவார்.",
+      "portrait": "https://raw.githubusercontent.com/simsonpeter/wallpaper/refs/heads/main/public/images/portrait/psalms.46_5.jpg"
+     },
     {
       "id": "philipians.4:4",
       "reference": "பிலிப்பியர்.4:4",
