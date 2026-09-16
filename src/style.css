@@ -93,6 +93,7 @@ body {
   position: relative;
   height: 100%;
   overflow: hidden;
+  touch-action: none;
 }
 
 .preview {
@@ -101,6 +102,12 @@ body {
   inset: 0 0 var(--dock-space) 0;
   background: #050505;
   overflow: hidden;
+  will-change: transform;
+  transition: transform 0.22s ease;
+}
+
+.preview.is-dragging {
+  transition: none;
 }
 
 .preview img {
@@ -109,6 +116,8 @@ body {
   object-fit: contain;
   object-position: center;
   display: block;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .preview-fallback {
@@ -176,6 +185,53 @@ body {
   font-size: 12px;
   font-weight: 600;
   padding: 7px 12px;
+  touch-action: manipulation;
+}
+
+.refresh-indicator {
+  position: absolute;
+  top: calc(var(--safe-top) + 10px);
+  left: 50%;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(18, 16, 12, 0.82);
+  border: 1px solid var(--line);
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transform: translate(-50%, -6px);
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(16px);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.refresh-indicator.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.refresh-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--line);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+}
+
+.refresh-indicator.is-refreshing .refresh-spinner {
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .hud {
@@ -223,6 +279,7 @@ body {
   position: absolute;
   top: 48%;
   z-index: 4;
+  touch-action: manipulation;
   width: clamp(36px, 10vw, 44px);
   height: clamp(36px, 10vw, 44px);
   display: grid;
@@ -258,6 +315,7 @@ body {
   right: max(10px, env(safe-area-inset-right));
   bottom: var(--safe-bottom);
   z-index: 4;
+  touch-action: manipulation;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 4px;

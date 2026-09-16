@@ -36,6 +36,9 @@ const sheetClose = document.querySelector<HTMLButtonElement>('#sheet-close')!
 const toast = document.querySelector<HTMLParagraphElement>('#toast')!
 const installBtn = document.querySelector<HTMLButtonElement>('#install-btn')!
 const splash = document.querySelector<HTMLElement>('#splash')!
+const screen = document.querySelector<HTMLElement>('.screen')!
+const refreshIndicator = document.querySelector<HTMLElement>('#refresh-indicator')!
+const refreshLabel = document.querySelector<HTMLElement>('#refresh-label')!
 
 catalogLink.href = GITHUB_REPO_URL
 
@@ -84,6 +87,14 @@ document.addEventListener(
 let verses: VerseWallpaper[] = []
 let selectedId = params.get('v') ?? ''
 let toastTimer = 0
+let refreshing = false
+let swipe: {
+  id: number
+  startX: number
+  startY: number
+  startAt: number
+  axis: 'undecided' | 'x' | 'y'
+} | null = null
 
 function selectedVerse(): VerseWallpaper | undefined {
   return verses.find((verse) => verse.id === selectedId) ?? verses[0]
@@ -194,7 +205,6 @@ function renderPreview() {
 
   selectedId = verse.id
   const url = currentImageUrl(verse)
-  const screen = document.querySelector<HTMLElement>('.screen')!
   verseRef.textContent = verse.reference
   verseText.textContent = verse.text
   fallbackRef.textContent = verse.reference
@@ -406,6 +416,166 @@ versesBtn.addEventListener('click', () => {
   setSheetOpen(true)
 })
 
+function gesturesBlocked(): boolean {
+  return anyGuideOpen() || document.documentElement.classList.contains('is-booting')
+}
+
+function resetSwipeTransform() {
+  preview.classList.remove('is-dragging')
+  preview.style.transform = ''
+}
+
+function setPullHint(distance: number, armed: boolean) {
+  const visible = refreshing || distance > 8
+  refreshIndicator.classList.toggle('is-visible', visible)
+  refreshIndicator.classList.toggle('is-refreshing', refreshing)
+  if (refreshing) {
+    refreshLabel.textContent = 'Refreshing...'
+    return
+  }
+  refreshLabel.textContent = armed ? 'Release to refresh' : 'Pull to refresh'
+}
+
+function endSwipe() {
+  swipe = null
+  if (!refreshing) {
+    resetSwipeTransform()
+    setPullHint(0, false)
+  }
+}
+
+async function loadVerses() {
+  const { catalog } = await loadCatalog()
+  verses = catalog.verses
+  statusEl.textContent = `${verses.length} verses`
+  renderPreview()
+}
+
+async function refreshCatalog() {
+  if (refreshing) {
+    return
+  }
+
+  refreshing = true
+  setPullHint(0, false)
+  try {
+    await loadVerses()
+    showToast('Updated.')
+  } catch (error) {
+    statusEl.textContent =
+      error instanceof Error ? error.message : 'Could not refresh.'
+    showToast(error instanceof Error ? error.message : 'Could not refresh.')
+  } finally {
+    refreshing = false
+    endSwipe()
+  }
+}
+
+function pointerFromControl(target: EventTarget | null): boolean {
+  return target instanceof Element && Boolean(target.closest('button, a, input, .dock, .sheet, .share-sheet'))
+}
+
+previewImage.draggable = false
+
+screen.addEventListener('pointerdown', (event) => {
+  if (event.pointerType === 'mouse' && event.button !== 0) {
+    return
+  }
+  if (gesturesBlocked() || refreshing || pointerFromControl(event.target)) {
+    return
+  }
+
+  swipe = {
+    id: event.pointerId,
+    startX: event.clientX,
+    startY: event.clientY,
+    startAt: Date.now(),
+    axis: 'undecided',
+  }
+  try {
+    screen.setPointerCapture(event.pointerId)
+  } catch {
+    // Synthetic or already-released pointers cannot be captured.
+  }
+})
+
+screen.addEventListener(
+  'pointermove',
+  (event) => {
+    if (!swipe || event.pointerId !== swipe.id) {
+      return
+    }
+
+    const dx = event.clientX - swipe.startX
+    const dy = event.clientY - swipe.startY
+
+    if (swipe.axis === 'undecided') {
+      if (Math.hypot(dx, dy) < 12) {
+        return
+      }
+      swipe.axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y'
+      preview.classList.add('is-dragging')
+    }
+
+    event.preventDefault()
+
+    if (swipe.axis === 'x') {
+      const width = screen.clientWidth || 1
+      const drag = Math.max(-width, Math.min(width, dx))
+      preview.style.transform = `translateX(${drag}px)`
+      setPullHint(0, false)
+      return
+    }
+
+    const pull = Math.max(0, dy)
+    const damped = Math.min(96, pull * 0.45)
+    preview.style.transform = `translateY(${damped}px)`
+    setPullHint(pull, pull > 64)
+  },
+  { passive: false },
+)
+
+function finishSwipe(event: PointerEvent) {
+  if (!swipe || event.pointerId !== swipe.id) {
+    return
+  }
+
+  const dx = event.clientX - swipe.startX
+  const dy = event.clientY - swipe.startY
+  const axis = swipe.axis
+  const elapsed = Math.max(1, Date.now() - swipe.startAt)
+  swipe = null
+
+  if (axis === 'x') {
+    const width = screen.clientWidth || 1
+    const fast = Math.abs(dx) / elapsed > 0.45
+    const far = Math.abs(dx) > Math.min(72, width * 0.18)
+    if ((fast || far) && verses.length > 1) {
+      goToVerse(dx < 0 ? 1 : -1)
+    }
+    resetSwipeTransform()
+    setPullHint(0, false)
+    return
+  }
+
+  if (axis === 'y' && dy > 64) {
+    preview.classList.remove('is-dragging')
+    preview.style.transform = 'translateY(28px)'
+    void refreshCatalog()
+    return
+  }
+
+  endSwipe()
+}
+
+screen.addEventListener('pointerup', finishSwipe)
+screen.addEventListener('pointercancel', (event) => {
+  if (!swipe || event.pointerId !== swipe.id) {
+    return
+  }
+  endSwipe()
+})
+
 prevBtn.addEventListener('click', () => {
   goToVerse(-1)
 })
@@ -494,10 +664,7 @@ function finishSplash() {
 window.setTimeout(hideSplash, 10000)
 
 try {
-  const { catalog } = await loadCatalog()
-  verses = catalog.verses
-  statusEl.textContent = `${verses.length} verses`
-  renderPreview()
+  await loadVerses()
 } catch (error) {
   statusEl.textContent =
     error instanceof Error ? error.message : 'Could not load verses.'
