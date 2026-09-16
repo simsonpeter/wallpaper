@@ -178,31 +178,6 @@ body {
   padding: 7px 12px;
 }
 
-.segment {
-  display: flex;
-  padding: 3px;
-  border-radius: 999px;
-  background: rgba(11, 10, 8, 0.45);
-  border: 1px solid var(--line);
-  backdrop-filter: blur(16px);
-}
-
-.orient {
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-size: clamp(11px, 2.8vw, 12px);
-  font-weight: 500;
-  padding: 7px 10px;
-  border-radius: 999px;
-}
-
-.orient.is-active {
-  background: var(--gold);
-  color: #1a140c;
-}
-
 .hud {
   position: absolute;
   left: 12px;
@@ -566,10 +541,6 @@ button {
   .nav-btn {
     top: 42%;
   }
-
-  .orient {
-    padding: 6px 8px;
-  }
 }
 
 @media (max-height: 420px) {
@@ -613,10 +584,6 @@ button {
 }
 
 @media (max-width: 360px) {
-  .orient {
-    padding: 7px 8px;
-  }
-
   .install-btn {
     padding: 7px 10px;
     font-size: 11px;

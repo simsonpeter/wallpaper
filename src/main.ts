@@ -1,7 +1,7 @@
 import './style.css'
 import { GITHUB_REPO_URL } from './config.ts'
 import { fileNameFor, loadCatalog, wallpaperUrl } from './catalog.ts'
-import type { Orientation, VerseWallpaper } from './types.ts'
+import type { VerseWallpaper } from './types.ts'
 
 const params = new URLSearchParams(location.search)
 const verseList = document.querySelector<HTMLUListElement>('#verse-list')!
@@ -83,8 +83,6 @@ document.addEventListener(
 
 let verses: VerseWallpaper[] = []
 let selectedId = params.get('v') ?? ''
-let orientation: Orientation =
-  params.get('o') === 'portrait' || params.get('o') === 'horizontal' ? 'portrait' : 'landscape'
 let toastTimer = 0
 
 function selectedVerse(): VerseWallpaper | undefined {
@@ -118,7 +116,7 @@ function setSheetOpen(open: boolean) {
 }
 
 function currentImageUrl(verse: VerseWallpaper): string {
-  return wallpaperUrl(verse, orientation) || wallpaperUrl(verse, orientation === 'landscape' ? 'portrait' : 'landscape')
+  return wallpaperUrl(verse)
 }
 
 function anyGuideOpen(): boolean {
@@ -158,7 +156,7 @@ function showToast(message: string) {
 }
 
 function syncUrl(verse: VerseWallpaper) {
-  const next = new URLSearchParams({ v: verse.id, o: orientation })
+  const next = new URLSearchParams({ v: verse.id })
   history.replaceState(null, '', `?${next.toString()}`)
 }
 
@@ -201,7 +199,7 @@ function renderPreview() {
   verseText.textContent = verse.text
   fallbackRef.textContent = verse.reference
   fallbackText.textContent = verse.text
-  preview.classList.toggle('is-portrait', orientation === 'portrait')
+  preview.classList.add('is-portrait')
   screen.classList.toggle('has-image', Boolean(url))
   downloadBtn.disabled = !url
   setWallpaperBtn.disabled = !url
@@ -209,21 +207,17 @@ function renderPreview() {
   prevBtn.disabled = verses.length < 2
   nextBtn.disabled = verses.length < 2
 
-  document.querySelectorAll<HTMLButtonElement>('.orient').forEach((button) => {
-    button.classList.toggle('is-active', button.dataset.orientation === orientation)
-  })
-
   if (url) {
     previewImage.hidden = false
     previewFallback.hidden = true
-    previewImage.alt = `${verse.reference} ${orientation} wallpaper`
+    previewImage.alt = `${verse.reference} wallpaper`
     previewImage.src = url
     fallbackNote.textContent = ''
   } else {
     previewImage.hidden = true
     previewImage.removeAttribute('src')
     previewFallback.hidden = false
-    fallbackNote.textContent = `Add a ${orientation} image link for ${verse.reference}.`
+    fallbackNote.textContent = `Add a portrait image link for ${verse.reference}.`
   }
 
   renderList(searchInput.value)
@@ -242,7 +236,7 @@ async function downloadWallpaper(): Promise<boolean> {
     return false
   }
 
-  const filename = fileNameFor(verse, orientation, url)
+  const filename = fileNameFor(verse, url)
   const fetchUrl = url.replace(
     /^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/(?:refs\/heads\/)?([^/]+)\/(.+)$/,
     'https://cdn.jsdelivr.net/gh/$1/$2@$3/$4',
@@ -328,7 +322,7 @@ async function shareImageOnly() {
   }
 
   setShareOpen(false)
-  const filename = fileNameFor(verse, orientation, imageUrl)
+  const filename = fileNameFor(verse, imageUrl)
   const fetchUrl = imageUrl.replace(
     /^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/(?:refs\/heads\/)?([^/]+)\/(.+)$/,
     'https://cdn.jsdelivr.net/gh/$1/$2@$3/$4',
@@ -374,13 +368,6 @@ verseList.addEventListener('click', (event) => {
 
 searchInput.addEventListener('input', () => {
   renderList(searchInput.value)
-})
-
-document.querySelectorAll<HTMLButtonElement>('.orient').forEach((button) => {
-  button.addEventListener('click', () => {
-    orientation = button.dataset.orientation === 'portrait' ? 'portrait' : 'landscape'
-    renderPreview()
-  })
 })
 
 downloadBtn.addEventListener('click', () => {

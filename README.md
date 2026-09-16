@@ -1,6 +1,6 @@
 # Verse Wallpapers
 
-Select a verse, preview the wallpaper, then download **landscape** or **portrait**, or share the link.
+Select a verse, preview the portrait wallpaper, then download or share it.
 
 The app loads the wallpaper catalog from GitHub:
 
@@ -8,9 +8,9 @@ The app loads the wallpaper catalog from GitHub:
 
 ## Add your wallpaper links
 
-1. Upload images to `public/images/landscape/` and `public/images/portrait/`.
+1. Upload images to `public/images/portrait/`.
 2. Open `public/data/wallpapers.json`.
-3. Paste a **direct image URL** into `landscape` and `portrait` for each verse.
+3. Paste a **direct image URL** into `portrait` for each verse.
 
 Example:
 
@@ -19,12 +19,11 @@ Example:
   "id": "john-3-16",
   "reference": "John 3:16",
   "text": "For God so loved the world...",
-  "landscape": "https://raw.githubusercontent.com/simsonpeter/wallpaper/main/public/images/landscape/john-3-16.jpg",
   "portrait": "https://raw.githubusercontent.com/simsonpeter/wallpaper/main/public/images/portrait/john-3-16.jpg"
 }
 ```
 
-To add a new verse, copy one object in the `verses` array and change `id`, `reference`, `text`, and the two URLs.
+To add a new verse, copy one object in the `verses` array and change `id`, `reference`, `text`, and `portrait`.
 
 ## Install the app
 

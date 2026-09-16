@@ -3,14 +3,14 @@ import {
   JSDELIVR_CATALOG_URL,
   LOCAL_CATALOG_URL,
 } from './config.ts'
-import type { Orientation, VerseWallpaper, WallpaperCatalog } from './types.ts'
+import type { VerseWallpaper, WallpaperCatalog } from './types.ts'
 
 function isFilled(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0
 }
 
 function normalizeVerse(
-  raw: Partial<VerseWallpaper> & { horizontal?: string },
+  raw: Partial<VerseWallpaper> & { landscape?: string; horizontal?: string; image?: string },
   index: number,
 ): VerseWallpaper {
   const reference = isFilled(raw.reference) ? raw.reference.trim() : `Verse ${index + 1}`
@@ -23,15 +23,18 @@ function normalizeVerse(
           .replace(/^-|-$/g, '')
   const portrait = isFilled(raw.portrait)
     ? raw.portrait.trim()
-    : isFilled(raw.horizontal)
-      ? raw.horizontal.trim()
-      : ''
+    : isFilled(raw.image)
+      ? raw.image.trim()
+      : isFilled(raw.horizontal)
+        ? raw.horizontal.trim()
+        : isFilled(raw.landscape)
+          ? raw.landscape.trim()
+          : ''
 
   return {
     id,
     reference,
     text: isFilled(raw.text) ? raw.text.trim() : '',
-    landscape: isFilled(raw.landscape) ? raw.landscape.trim() : '',
     portrait,
   }
 }
@@ -75,13 +78,13 @@ export async function loadCatalog(): Promise<{
   return { catalog, source: 'local' }
 }
 
-export function wallpaperUrl(verse: VerseWallpaper, orientation: Orientation): string {
-  return orientation === 'landscape' ? verse.landscape : verse.portrait
+export function wallpaperUrl(verse: VerseWallpaper): string {
+  return verse.portrait
 }
 
-export function fileNameFor(verse: VerseWallpaper, orientation: Orientation, url: string): string {
+export function fileNameFor(verse: VerseWallpaper, url: string): string {
   const cleanPath = url.split('?')[0] ?? url
   const extensionMatch = cleanPath.match(/\.(jpe?g|png|webp|gif|avif)$/i)
   const extension = extensionMatch?.[1]?.toLowerCase() ?? 'jpg'
-  return `${verse.id}-${orientation}.${extension}`
+  return `${verse.id}.${extension}`
 }
